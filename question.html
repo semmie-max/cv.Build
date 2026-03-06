@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV.Build — Your Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --border:#ddd; --grey:rgba(0,0,0,0.4); --red:#cc0000; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"Libre Baskerville",serif; background:#fff; color:#000; }
+
+    header { padding:25px 60px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:#fff; z-index:100; }
+    .logo { font-family:"Cormorant Garamond",serif; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:5px; color:#000; text-decoration:none; }
+    .logo span { color:#000; }
+    .job-badge { font-family:"Libre Baskerville",serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:2px; background:#000; color:#fff; padding:7px 16px; }
+
+    .progress-bar { height:3px; background:var(--border); }
+    .progress-fill { height:100%; background:#000; transition:width 0.4s ease; width:0%; }
+    .hero { padding:50px 60px 30px; border-bottom:1px solid var(--border); }
+    .hero-label { font-family:"Libre Baskerville",serif; font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:5px; color:var(--grey); margin-bottom:10px; }
+    .hero-heading { font-family:"Cormorant Garamond",serif; font-size:60px; font-weight:700; text-transform:uppercase; line-height:1; letter-spacing:2px; }
+    .hero-heading span { color:#fff; -webkit-text-stroke:2px #000; }
+
+    .form-wrap { max-width:800px; margin:0 auto; padding:60px; }
+
+    .form-section { margin-bottom:50px; }
+    .section-title { font-family:"Libre Baskerville",serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:5px; margin-bottom:30px; padding-bottom:10px; border-bottom:2px solid #000; display:flex; align-items:center; gap:12px; }
+    .section-num { font-family:"Cormorant Garamond",serif; font-size:28px; font-weight:700; color:#000; line-height:1; }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-family:"Libre Baskerville",serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--grey); }
+    label .req { color:#000; }
+    input, textarea, select {
+      border:none; border-bottom:1px solid #000; padding:12px 0; font-size:14px;
+      font-family:"Libre Baskerville",serif; color:#000; background:transparent;
+      outline:none; transition:border-color 0.2s; width:100%;
+    }
+    input:focus, textarea:focus, select:focus { border-bottom:2px solid #000; }
+    input.error, textarea.error { border-bottom:2px solid var(--red); }
+    input::placeholder, textarea::placeholder { color:rgba(0,0,0,0.25); font-family:"Libre Baskerville",serif; }
+    textarea { resize:vertical; min-height:100px; }
+    select { cursor:pointer; }
+
+    .entries-wrap { display:flex; flex-direction:column; gap:25px; }
+    .entry-card { border:1px solid var(--border); padding:25px; position:relative; }
+    .entry-card .remove-btn { position:absolute; top:15px; right:15px; background:none; border:none; font-size:18px; cursor:pointer; color:var(--grey); font-family:"Libre Baskerville",serif; line-height:1; }
+    .entry-card .remove-btn:hover { color:#000; }
+    .add-btn { display:flex; align-items:center; gap:10px; background:none; border:1px dashed #000; padding:14px 20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; cursor:pointer; font-family:"Libre Baskerville",serif; transition:all 0.2s; width:100%; margin-top:15px; }
+    .add-btn:hover { background:#000; color:#fff; }
+
+    .tags-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .tag { display:flex; align-items:center; gap:6px; background:#000; color:#fff; padding:5px 12px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; font-family:"Libre Baskerville",serif; }
+    .tag button { background:none; border:none; color:#fff; cursor:pointer; font-size:14px; line-height:1; padding:0; opacity:0.6; }
+    .tag button:hover { opacity:1; }
+    .skill-input-row { display:flex; gap:10px; }
+    .skill-input-row input { flex:1; }
+    .skill-add-btn { background:#000; color:#fff; border:none; padding:8px 18px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer; font-family:"Libre Baskerville",serif; white-space:nowrap; }
+    .skill-add-btn:hover { background:#333; }
+    .submit-wrap { padding:0 60px 80px; }
+    .submit-btn { width:100%; max-width:800px; margin:0 auto; display:block; background:#000; color:#fff; border:none; padding:22px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:4px; cursor:pointer; font-family:"Libre Baskerville",serif; transition:all 0.3s; }
+    .submit-btn:hover { background:#333; }
+
+    @media(max-width:768px) {
+      header { padding:20px; }
+      .hero { padding:30px 20px 20px; }
+      .hero-heading { font-size:38px; }
+      .form-wrap { padding:30px 20px; }
+      .form-grid { grid-template-columns:1fr; }
+      .submit-wrap { padding:0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">CV<span>.</span>Build</a>
+    <div class="job-badge" id="jobBadge">Your CV</div>
+  </header>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="hero">
+    <p class="hero-label">Step 01 — Your Details</p>
+    <h1 class="hero-heading">Tell Us <span>About You</span></h1>
+  </div>
+
+  <div class="form-wrap">
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">01</span> Personal Information</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Full Name <span class="req">*</span></label><input type="text" id="fullName" placeholder="Aremomhe Gift Remy"></div>
+        <div class="form-group"><label>Job Title <span class="req">*</span></label><input type="text" id="jobTitle" placeholder="Frontend Developer"></div>
+        <div class="form-group"><label>Email Address <span class="req">*</span></label><input type="email" id="email" placeholder="you@email.com"></div>
+        <div class="form-group"><label>Phone Number <span class="req">*</span></label><input type="tel" id="phone" placeholder="+234 800 000 0000"></div>
+        <div class="form-group"><label>Location <span class="req">*</span></label><input type="text" id="location" placeholder="Lagos, Nigeria"></div>
+        <div class="form-group"><label>Website / LinkedIn <span style="color:var(--grey);font-size:9px;">(optional)</span></label><input type="text" id="website" placeholder="linkedin.com/in/yourname"></div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">02</span> Professional Summary</div>
+      <div class="form-group full">
+        <label>Summary <span class="req">*</span></label>
+        <textarea id="summary" placeholder="Write a short paragraph about yourself, your experience, and what you bring to the table..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">03</span> Work Experience</div>
+      <div class="entries-wrap" id="experienceWrap"></div>
+      <button class="add-btn" onclick="addExperience()">+ Add Work Experience</button>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">04</span> Skills</div>
+      <div class="skill-input-row">
+        <input type="text" id="skillInput" placeholder="e.g. JavaScript, Photoshop, Project Management">
+        <button class="skill-add-btn" onclick="addSkill()">Add</button>
+      </div>
+      <div class="tags-wrap" id="skillTags"></div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">05</span> Languages</div>
+      <div class="entries-wrap" id="languagesWrap"></div>
+      <button class="add-btn" onclick="addLanguage()">+ Add Language</button>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">06</span> Education <span style="font-size:9px;color:var(--grey);font-weight:500;letter-spacing:1px;">(optional)</span></div>
+      <div class="entries-wrap" id="educationWrap"></div>
+      <button class="add-btn" onclick="addEducation()">+ Add Education</button>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="section-num">07</span> Extra Sections <span style="font-size:9px;color:var(--grey);font-weight:500;letter-spacing:1px;">(optional)</span></div>
+      <div class="entries-wrap" id="customWrap"></div>
+      <button class="add-btn" onclick="addCustom()">+ Add Custom Section</button>
+    </div>
+
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" onclick="submitForm()">Generate My CV Templates →</button>
+  </div>
+
+  <script>
+    
+    const jobRole = localStorage.getItem('jobRole') || '';
+    if (jobRole) {
+      document.getElementById('jobBadge').textContent = jobRole;
+      document.getElementById('jobTitle').value = jobRole;
+    }
+
+    let skills = [];
+    let expCount = 0, langCount = 0, eduCount = 0, customCount = 0;
+
+    addExperience(); addLanguage();
+
+    function addExperience() {
+      expCount++;
+      const id = expCount;
+      const wrap = document.getElementById('experienceWrap');
+      const div = document.createElement('div');
+      div.className = 'entry-card';
+      div.id = 'exp-' + id;
+      div.innerHTML = `
+        <button class="remove-btn" onclick="removeEntry('exp-${id}')">×</button>
+        <div class="form-grid">
+          <div class="form-group"><label>Job Title <span class="req">*</span></label><input type="text" id="exp-title-${id}" placeholder="Frontend Developer"></div>
+          <div class="form-group"><label>Company <span class="req">*</span></label><input type="text" id="exp-company-${id}" placeholder="Google"></div>
+          <div class="form-group"><label>Start Date <span class="req">*</span></label><input type="text" id="exp-start-${id}" placeholder="Jan 2022"></div>
+          <div class="form-group"><label>End Date</label><input type="text" id="exp-end-${id}" placeholder="Dec 2024 or Present"></div>
+          <div class="form-group full"><label>Description <span class="req">*</span></label><textarea id="exp-desc-${id}" placeholder="Describe your responsibilities and achievements..."></textarea></div>
+        </div>`;
+      wrap.appendChild(div);
+      updateProgress();
+    }
+
+    function addLanguage() {
+      langCount++;
+      const id = langCount;
+      const wrap = document.getElementById('languagesWrap');
+      const div = document.createElement('div');
+      div.className = 'entry-card';
+      div.id = 'lang-' + id;
+      div.innerHTML = `
+        <button class="remove-btn" onclick="removeEntry('lang-${id}')">×</button>
+        <div class="form-grid">
+          <div class="form-group"><label>Language <span class="req">*</span></label><input type="text" id="lang-name-${id}" placeholder="English"></div>
+          <div class="form-group"><label>Proficiency <span class="req">*</span></label>
+            <select id="lang-level-${id}">
+              <option value="">Select level</option>
+              <option>Native</option><option>Fluent</option><option>Intermediate</option><option>Basic</option>
+            </select>
+          </div>
+        </div>`;
+      wrap.appendChild(div);
+      updateProgress();
+    }
+
+    function addEducation() {
+      eduCount++;
+      const id = eduCount;
+      const wrap = document.getElementById('educationWrap');
+      const div = document.createElement('div');
+      div.className = 'entry-card';
+      div.id = 'edu-' + id;
+      div.innerHTML = `
+        <button class="remove-btn" onclick="removeEntry('edu-${id}')">×</button>
+        <div class="form-grid">
+          <div class="form-group"><label>Degree / Certificate</label><input type="text" id="edu-degree-${id}" placeholder="B.Sc Computer Science"></div>
+          <div class="form-group"><label>School / Institution</label><input type="text" id="edu-school-${id}" placeholder="University of Lagos"></div>
+          <div class="form-group"><label>Start Year</label><input type="text" id="edu-start-${id}" placeholder="2018"></div>
+          <div class="form-group"><label>End Year</label><input type="text" id="edu-end-${id}" placeholder="2022"></div>
+        </div>`;
+      wrap.appendChild(div);
+    }
+
+    function addCustom() {
+      customCount++;
+      const id = customCount;
+      const wrap = document.getElementById('customWrap');
+      const div = document.createElement('div');
+      div.className = 'entry-card';
+      div.id = 'custom-' + id;
+      div.innerHTML = `
+        <button class="remove-btn" onclick="removeEntry('custom-${id}')">×</button>
+        <div class="form-grid">
+          <div class="form-group full"><label>Section Title</label><input type="text" id="custom-title-${id}" placeholder="Certifications, Awards, Volunteering..."></div>
+          <div class="form-group full"><label>Content</label><textarea id="custom-content-${id}" placeholder="Describe this section..."></textarea></div>
+        </div>`;
+      wrap.appendChild(div);
+    }
+
+    function removeEntry(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+      updateProgress();
+    }
+
+    function addSkill() {
+      const input = document.getElementById('skillInput');
+      const val = input.value.trim();
+      if (!val || skills.includes(val)) { input.value=''; return; }
+      skills.push(val);
+      renderTags();
+      input.value = '';
+      updateProgress();
+    }
+
+    document.getElementById('skillInput').addEventListener('keydown', e => { if(e.key==='Enter') { e.preventDefault(); addSkill(); } });
+
+    function removeSkill(skill) {
+      skills = skills.filter(s => s !== skill);
+      renderTags();
+      updateProgress();
+    }
+
+    function renderTags() {
+      const wrap = document.getElementById('skillTags');
+      wrap.innerHTML = skills.map(s => `<div class="tag">${s}<button onclick="removeSkill('${s}')">×</button></div>`).join('');
+    }
+
+    function updateProgress() {
+      const fields = ['fullName','email','phone','location','summary'];
+      const filled = fields.filter(f => document.getElementById(f)?.value.trim()).length;
+      const pct = Math.min(100, (filled / fields.length) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', updateProgress));
+
+    function getExperiences() {
+      const result = [];
+      document.querySelectorAll('[id^="exp-title-"]').forEach(el => {
+        const id = el.id.split('exp-title-')[1];
+        result.push({
+          title: el.value.trim(),
+          company: document.getElementById('exp-company-'+id)?.value.trim()||'',
+          start: document.getElementById('exp-start-'+id)?.value.trim()||'',
+          end: document.getElementById('exp-end-'+id)?.value.trim()||'',
+          description: document.getElementById('exp-desc-'+id)?.value.trim()||''
+        });
+      });
+      return result.filter(e => e.title);
+    }
+
+    function getLanguages() {
+      const result = [];
+      document.querySelectorAll('[id^="lang-name-"]').forEach(el => {
+        const id = el.id.split('lang-name-')[1];
+        result.push({
+          name: el.value.trim(),
+          level: document.getElementById('lang-level-'+id)?.value||''
+        });
+      });
+      return result.filter(l => l.name);
+    }
+
+    function getEducation() {
+      const result = [];
+      document.querySelectorAll('[id^="edu-degree-"]').forEach(el => {
+        const id = el.id.split('edu-degree-')[1];
+        result.push({
+          degree: el.value.trim(),
+          school: document.getElementById('edu-school-'+id)?.value.trim()||'',
+          start: document.getElementById('edu-start-'+id)?.value.trim()||'',
+          end: document.getElementById('edu-end-'+id)?.value.trim()||''
+        });
+      });
+      return result.filter(e => e.degree);
+    }
+
+    function getCustomSections() {
+      const result = [];
+      document.querySelectorAll('[id^="custom-title-"]').forEach(el => {
+        const id = el.id.split('custom-title-')[1];
+        result.push({
+          title: el.value.trim(),
+          content: document.getElementById('custom-content-'+id)?.value.trim()||''
+        });
+      });
+      return result.filter(c => c.title);
+    }
+
+    function submitForm() {
+      const required = ['fullName','jobTitle','email','phone','location','summary'];
+      let valid = true;
+      required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+        else el.classList.remove('error');
+      });
+      if (!valid) { alert('Please fill in all required fields.'); return; }
+
+      const cvData = {
+        jobRole: localStorage.getItem('jobRole')||'',
+        fullName: document.getElementById('fullName').value.trim(),
+        jobTitle: document.getElementById('jobTitle').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        location: document.getElementById('location').value.trim(),
+        website: document.getElementById('website').value.trim(),
+        summary: document.getElementById('summary').value.trim(),
+        skills,
+        experience: getExperiences(),
+        languages: getLanguages(),
+        education: getEducation(),
+        customSections: getCustomSections()
+      };
+
+      localStorage.setItem('cvData', JSON.stringify(cvData));
+      window.location.href = 'templates.html';
+    }
+  </script>
+</body>
+</html>
