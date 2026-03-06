@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV.Build — Free Professional CV Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #fff;
+      --grey: rgba(0,0,0,0.4);
+      --border: #ddd;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"Libre Baskerville",serif; background:#fff; color:#000; min-height:100vh; overflow-x:hidden; }
+
+    header { padding:28px 60px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+    .logo { font-family:"Cormorant Garamond",serif; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:5px; color:#000; text-decoration:none; }
+    .logo span { color:#000; }
+    .badge { font-family:"Libre Baskerville",serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:3px; background:#000; color:#fff; padding:7px 16px; }
+
+    /* HERO */
+    .hero { min-height:calc(100vh - 80px); display:grid; grid-template-columns:1fr 1fr; }
+    .hero-left { padding:80px 60px; display:flex; flex-direction:column; justify-content:center; border-right:1px solid var(--border); }
+    .hero-label { font-family:"Libre Baskerville",serif; font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:5px; color:var(--grey); margin-bottom:20px; }
+    .hero-heading { font-family:"Cormorant Garamond",serif; font-size:clamp(52px,6vw,88px); font-weight:700; text-transform:uppercase; line-height:0.9; letter-spacing:2px; margin-bottom:30px; }
+    .hero-heading .accent { color:#000; }
+    .hero-heading .outline { color:#fff; -webkit-text-stroke:2px #000; }
+    .hero-sub { font-family:"Libre Baskerville",serif; font-size:11px; color:var(--grey); line-height:2; max-width:400px; margin-bottom:50px; text-transform:uppercase; letter-spacing:1px; }
+    .search-wrap { display:flex; gap:0; max-width:480px; }
+    .search-input { flex:1; border:1px solid #000; border-right:none; padding:18px 20px; font-size:13px; font-family:"Libre Baskerville",serif; outline:none; background:#fff; }
+    .search-input::placeholder { color:rgba(0,0,0,0.3); font-family:"Libre Baskerville",serif; }
+    .search-btn { background:#000; color:#fff; border:none; padding:18px 30px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:3px; cursor:pointer; font-family:"Libre Baskerville",serif; transition:all 0.3s; white-space:nowrap; }
+    .search-btn:hover { background:#333; color:#fff; }
+    .search-btn:disabled { opacity:0.3; cursor:not-allowed; }
+    .search-btn:disabled:hover { background:#000; color:#fff; }
+    .hero-note { font-family:"Libre Baskerville",serif; font-size:9px; color:var(--grey); text-transform:uppercase; letter-spacing:2px; margin-top:16px; }
+    .hero-note span { color:#000; font-weight:700; }
+    .hero-right { padding:60px 40px; display:flex; flex-direction:column; gap:20px; overflow:hidden; background:#f8f8f8; }
+    .template-preview { border:1px solid var(--border); background:#fff; padding:25px; flex:1; display:flex; flex-direction:column; gap:10px; animation:float 6s ease-in-out infinite; }
+    .template-preview:nth-child(2) { animation-delay:2s; }
+    .template-preview:nth-child(3) { animation-delay:4s; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .tp-bar { height:8px; background:#000; border-radius:0; }
+    .tp-bar.green { background:#000; width:60%; }
+    .tp-bar.thin { height:3px; background:#ddd; width:80%; }
+    .tp-bar.thin.short { width:50%; }
+    .tp-name { font-family:"Cormorant Garamond",serif; font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:3px; }
+    .tp-role { font-family:"Libre Baskerville",serif; font-size:8px; color:var(--grey); text-transform:uppercase; letter-spacing:3px; }
+    .tp-tag { font-family:"Libre Baskerville",serif; font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:2px; background:#000; color:#fff; padding:3px 10px; display:inline-block; }
+
+    @media(max-width:768px) {
+      header { padding:20px; }
+      .hero { grid-template-columns:1fr; min-height:auto; }
+      .hero-left { padding:40px 20px; }
+      .hero-right { display:none; }
+      .hero-heading { font-size:52px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">CV<span>.</span>Build</a>
+    <div class="badge">100% Free</div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-label">Professional CV Builder</p>
+      <h1 class="hero-heading">
+        Build A<br>
+        <span class="accent">Pro CV</span><br>
+        <span class="outline">In Minutes</span>
+      </h1>
+      <p class="hero-sub">Fill in your details once. Get 3 unique professionally designed CV templates. Pick your favorite and download for free.</p>
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="jobInput" placeholder="What role are you applying for?">
+        <button class="search-btn" id="startBtn" disabled onclick="goToQuestions()">Start →</button>
+      </div>
+      <p class="hero-note"><span>Free.</span> No signup. No payment. Just your CV.</p>
+    </div>
+    <div class="hero-right">
+      <div class="template-preview">
+        <div class="tp-name">John Doe</div>
+        <div class="tp-role">Senior Product Designer</div>
+        <div class="tp-bar green"></div>
+        <div class="tp-bar thin"></div>
+        <div class="tp-bar thin short"></div>
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <div class="tp-tag">Figma</div><div class="tp-tag">UX</div><div class="tp-tag">Design</div>
+        </div>
+      </div>
+      <div class="template-preview" style="background:#000;border-color:#000;">
+        <div class="tp-name" style="color:#fff;">Jane Smith</div>
+        <div class="tp-role" style="color:rgba(255,255,255,0.5);">Software Engineer</div>
+        <div class="tp-bar" style="background:#fff;width:70%;height:3px;"></div>
+        <div class="tp-bar thin" style="background:#333;"></div>
+        <div class="tp-bar thin short" style="background:#333;"></div>
+      </div>
+      <div class="template-preview">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+          <div>
+            <div class="tp-name" style="font-size:14px;">Ada Okafor</div>
+            <div class="tp-role">Marketing Manager</div>
+          </div>
+          <div class="tp-bar" style="width:3px;height:40px;background:#000;"></div>
+        </div>
+        <div class="tp-bar thin"></div>
+        <div class="tp-bar thin short"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('jobInput');
+    const btn = document.getElementById('startBtn');
+    input.addEventListener('input', () => {
+      btn.disabled = input.value.trim() === '';
+    });
+    function goToQuestions() {
+      localStorage.setItem('jobRole', input.value.trim());
+      window.location.href = 'question.html';
+    }
+    input.addEventListener('keydown', e => { if(e.key==='Enter' && !btn.disabled) goToQuestions(); });
+  </script>
+</body>
+</html>
