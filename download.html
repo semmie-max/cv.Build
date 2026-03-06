@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV.Build — Download Your CV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Playfair+Display:wght@400;500;600;700;800&family=DM+Serif+Display&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --green:#88ffc6; --border:#ddd; --grey:rgba(0,0,0,0.45); }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"Libre Baskerville",serif; background:#fff; color:#000; min-height:100vh; }
+
+    .page-header { padding:25px 60px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .logo { font-family:"Cormorant Garamond",serif; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:5px; color:#000; text-decoration:none; }
+    .logo span { color:#000; }
+
+    .hero { padding:60px 60px 40px; border-bottom:1px solid var(--border); }
+    .hero-label { font-family:"Libre Baskerville",serif; font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:4px; color:var(--grey); margin-bottom:10px; }
+    .hero-heading { font-family:"Cormorant Garamond",serif; font-size:64px; font-weight:700; text-transform:uppercase; line-height:1; letter-spacing:2px; }
+    .hero-heading span { color:#fff; -webkit-text-stroke:2px #000; }
+    .hero-sub { font-family:"Libre Baskerville",serif; font-size:11px; color:var(--grey); text-transform:uppercase; letter-spacing:2px; margin-top:12px; }
+
+    .cv-section { padding:60px; }
+    .cv-card { border:1px solid #000; max-width:900px; margin:0 auto; }
+    .cv-card-header { padding:25px 35px; border-bottom:1px solid #000; display:flex; align-items:center; justify-content:space-between; background:#000; }
+    .cv-card-title { font-family:"Libre Baskerville",serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#fff; }
+    .cv-card-body { overflow-y:auto; max-height:600px; }
+    .cv-card-body::-webkit-scrollbar { width:4px; }
+    .cv-card-body::-webkit-scrollbar-thumb { background:#000; }
+    .cv-card-footer { padding:20px 35px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .cv-card-hint { font-family:"Libre Baskerville",serif; font-size:9px; color:var(--grey); text-transform:uppercase; letter-spacing:2px; }
+    .download-btn { background:#000; color:#fff; border:none; padding:16px 40px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:3px; cursor:pointer; font-family:"Libre Baskerville",serif; transition:all 0.3s; display:flex; align-items:center; gap:10px; }
+    .download-btn:hover { background:#333; }
+    .download-btn svg { width:16px; height:16px; fill:currentColor; }
+
+    .how-to { margin:0 60px 60px; background:#f8f8f8; border:1px solid var(--border); padding:30px 35px; max-width:900px; margin-left:auto; margin-right:auto; margin-bottom:60px; }
+    .how-to-title { font-family:"Libre Baskerville",serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:4px; margin-bottom:18px; }
+    .how-to-steps { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .how-to-step { display:flex; gap:15px; align-items:flex-start; }
+    .step-num { font-family:"Cormorant Garamond",serif; font-size:36px; font-weight:700; color:#000; line-height:1; flex-shrink:0; }
+    .step-text { font-family:"Libre Baskerville",serif; font-size:10px; color:var(--grey); text-transform:uppercase; letter-spacing:1px; line-height:1.8; padding-top:6px; }
+
+    .back-link { display:block; text-align:center; padding:0 0 60px; font-family:"Libre Baskerville",serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:var(--grey); text-decoration:none; }
+    .back-link:hover { color:#000; }
+
+    /* PRINT */
+    @media print {
+      body * { visibility:hidden; }
+      #printArea, #printArea * { visibility:visible; }
+      #printArea { position:fixed; top:0; left:0; width:100%; background:#fff; }
+      @page { margin:0; size:A4; }
+    }
+
+    /* ══ ALL 12 TEMPLATE STYLES ══ */
+
+    .cv-minimal { background:#fff; padding:50px; font-family:"Montserrat",sans-serif; }
+    .cv-minimal .cv-name { font-size:36px; font-weight:800; text-transform:uppercase; letter-spacing:4px; line-height:1; margin-bottom:6px; }
+    .cv-minimal .cv-role { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:4px; color:var(--grey); margin-bottom:25px; }
+    .cv-minimal .cv-contact { display:flex; gap:25px; flex-wrap:wrap; font-size:10px; color:var(--grey); text-transform:uppercase; letter-spacing:1px; padding-bottom:25px; border-bottom:1px solid #000; margin-bottom:30px; }
+    .cv-minimal .cv-section-title { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:4px; margin-bottom:12px; }
+    .cv-minimal .cv-summary { font-size:12px; line-height:1.8; color:#333; margin-bottom:30px; padding-bottom:30px; border-bottom:1px solid var(--border); }
+    .cv-minimal .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+    .cv-minimal .cv-exp-item:last-child { border-bottom:none; }
+    .cv-minimal .cv-exp-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px; }
+    .cv-minimal .cv-exp-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+    .cv-minimal .cv-exp-company { font-size:10px; color:var(--grey); margin-bottom:6px; text-transform:uppercase; }
+    .cv-minimal .cv-exp-date { font-size:10px; color:var(--grey); text-transform:uppercase; white-space:nowrap; }
+    .cv-minimal .cv-exp-desc { font-size:11px; line-height:1.7; color:#444; }
+    .cv-minimal .cv-skills-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px; }
+    .cv-minimal .cv-skill { border:1px solid #000; padding:3px 12px; font-size:9px; font-weight:600; text-transform:uppercase; }
+    .cv-minimal .cv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:35px; }
+    .cv-minimal .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid var(--border); text-transform:uppercase; }
+    .cv-minimal .cv-lang-level { color:var(--grey); }
+    .cv-minimal .cv-edu-degree { font-size:11px; font-weight:700; text-transform:uppercase; }
+    .cv-minimal .cv-edu-school { font-size:10px; color:var(--grey); text-transform:uppercase; }
+    .cv-minimal .cv-section-block { margin-bottom:30px; }
+
+    .cv-modern { background:#fff; display:grid; grid-template-columns:260px 1fr; font-family:"Montserrat",sans-serif; }
+    .cv-modern .cv-sidebar { background:#000; color:#fff; padding:40px 25px; }
+    .cv-modern .cv-name { font-size:22px; font-weight:800; text-transform:uppercase; letter-spacing:2px; line-height:1.1; margin-bottom:5px; color:#fff; }
+    .cv-modern .cv-role { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:3px; color:#88ffc6; margin-bottom:30px; }
+    .cv-modern .sidebar-section-title { font-size:8px; font-weight:800; text-transform:uppercase; letter-spacing:4px; color:rgba(255,255,255,0.4); margin-bottom:10px; margin-top:25px; }
+    .cv-modern .cv-contact-item { font-size:9px; color:rgba(255,255,255,0.7); margin-bottom:5px; line-height:1.5; word-break:break-all; }
+    .cv-modern .cv-skill { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+    .cv-modern .cv-skill-dot { width:5px; height:5px; background:#88ffc6; flex-shrink:0; }
+    .cv-modern .cv-skill-name { font-size:9px; color:rgba(255,255,255,0.8); text-transform:uppercase; }
+    .cv-modern .cv-lang-item { display:flex; justify-content:space-between; font-size:9px; color:rgba(255,255,255,0.7); margin-bottom:5px; text-transform:uppercase; }
+    .cv-modern .cv-lang-level { color:#88ffc6; }
+    .cv-modern .cv-main { padding:40px 35px; }
+    .cv-modern .cv-section-title { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:4px; margin-bottom:15px; padding-bottom:7px; border-bottom:2px solid #000; }
+    .cv-modern .cv-summary { font-size:11px; line-height:1.8; color:#444; margin-bottom:30px; }
+    .cv-modern .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+    .cv-modern .cv-exp-item:last-child { border-bottom:none; }
+    .cv-modern .cv-exp-title { font-size:12px; font-weight:700; text-transform:uppercase; margin-bottom:2px; }
+    .cv-modern .cv-exp-meta { font-size:9px; color:var(--grey); text-transform:uppercase; margin-bottom:7px; }
+    .cv-modern .cv-exp-desc { font-size:11px; line-height:1.7; color:#444; }
+    .cv-modern .cv-section-block { margin-bottom:30px; }
+
+    .cv-corporate { background:#fff; font-family:"Playfair Display",serif; }
+    .cv-corporate .cv-top { background:#000; color:#fff; padding:45px 55px; text-align:center; }
+    .cv-corporate .cv-name { font-size:42px; font-weight:700; letter-spacing:6px; text-transform:uppercase; margin-bottom:7px; }
+    .cv-corporate .cv-role { font-size:11px; letter-spacing:6px; text-transform:uppercase; color:#88ffc6; font-family:"Montserrat",sans-serif; }
+    .cv-corporate .cv-contact { display:flex; justify-content:center; gap:25px; flex-wrap:wrap; margin-top:15px; font-family:"Montserrat",sans-serif; font-size:10px; color:rgba(255,255,255,0.6); text-transform:uppercase; }
+    .cv-corporate .cv-body { padding:45px 55px; }
+    .cv-corporate .cv-section-title { font-size:18px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:15px; padding-bottom:8px; border-bottom:1px solid #000; display:flex; align-items:center; gap:12px; }
+    .cv-corporate .cv-section-title::before { content:''; width:25px; height:2px; background:#88ffc6; display:inline-block; flex-shrink:0; }
+    .cv-corporate .cv-summary { font-size:13px; line-height:1.9; color:#333; margin-bottom:35px; font-style:italic; }
+    .cv-corporate .cv-exp-item { margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--border); }
+    .cv-corporate .cv-exp-item:last-child { border-bottom:none; }
+    .cv-corporate .cv-exp-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:3px; }
+    .cv-corporate .cv-exp-title { font-size:15px; font-weight:700; }
+    .cv-corporate .cv-exp-date { font-family:"Montserrat",sans-serif; font-size:9px; color:var(--grey); text-transform:uppercase; }
+    .cv-corporate .cv-exp-company { font-family:"Montserrat",sans-serif; font-size:10px; color:var(--grey); text-transform:uppercase; margin-bottom:8px; }
+    .cv-corporate .cv-exp-desc { font-size:12px; line-height:1.8; color:#444; font-family:"Montserrat",sans-serif; }
+    .cv-corporate .cv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:35px; }
+    .cv-corporate .cv-skill { font-family:"Montserrat",sans-serif; font-size:10px; padding:5px 0; border-bottom:1px solid var(--border); text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .cv-corporate .cv-skill::before { content:''; width:4px; height:4px; background:#88ffc6; border:1px solid #000; flex-shrink:0; }
+    .cv-corporate .cv-lang-item { font-family:"Montserrat",sans-serif; display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid var(--border); text-transform:uppercase; }
+    .cv-corporate .cv-lang-level { color:var(--grey); }
+    .cv-corporate .cv-edu-degree { font-size:14px; font-weight:700; }
+    .cv-corporate .cv-edu-school { font-family:"Montserrat",sans-serif; font-size:10px; color:var(--grey); text-transform:uppercase; }
+    .cv-corporate .cv-section-block { margin-bottom:35px; }
+
+    .cv-executive { background:#f9f7f4; font-family:"DM Serif Display",serif; }
+    .cv-executive .cv-top { padding:50px 55px 35px; border-bottom:3px solid #000; display:flex; align-items:flex-end; justify-content:space-between; }
+    .cv-executive .cv-name { font-size:52px; font-weight:400; letter-spacing:2px; line-height:1; }
+    .cv-executive .cv-top-right { text-align:right; }
+    .cv-executive .cv-role { font-family:"Montserrat",sans-serif; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#666; margin-bottom:10px; }
+    .cv-executive .cv-contact { font-family:"Montserrat",sans-serif; font-size:9px; color:#888; text-transform:uppercase; line-height:1.8; }
+    .cv-executive .cv-body { padding:40px 55px; display:grid; grid-template-columns:1fr 280px; gap:50px; }
+    .cv-executive .cv-section-title { font-size:22px; font-weight:400; margin-bottom:15px; }
+    .cv-executive .cv-section-line { width:40px; height:2px; background:#000; margin-bottom:20px; }
+    .cv-executive .cv-summary { font-family:"Montserrat",sans-serif; font-size:12px; line-height:1.9; color:#444; margin-bottom:35px; }
+    .cv-executive .cv-exp-item { margin-bottom:25px; padding-bottom:25px; border-bottom:1px solid #ddd; }
+    .cv-executive .cv-exp-item:last-child { border-bottom:none; }
+    .cv-executive .cv-exp-title { font-size:18px; font-weight:400; margin-bottom:3px; }
+    .cv-executive .cv-exp-meta { font-family:"Montserrat",sans-serif; font-size:9px; color:#888; text-transform:uppercase; margin-bottom:8px; }
+    .cv-executive .cv-exp-desc { font-family:"Montserrat",sans-serif; font-size:11px; line-height:1.8; color:#555; }
+    .cv-executive .cv-sidebar-section { margin-bottom:30px; }
+    .cv-executive .cv-sidebar-title { font-size:16px; font-weight:400; margin-bottom:5px; }
+    .cv-executive .cv-sidebar-line { width:25px; height:1px; background:#000; margin-bottom:15px; }
+    .cv-executive .cv-skill { font-family:"Montserrat",sans-serif; font-size:10px; color:#444; text-transform:uppercase; padding:5px 0; border-bottom:1px solid #e0e0e0; }
+    .cv-executive .cv-lang-item { font-family:"Montserrat",sans-serif; display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid #e0e0e0; text-transform:uppercase; }
+    .cv-executive .cv-lang-level { color:#888; }
+    .cv-executive .cv-edu-degree { font-size:15px; font-weight:400; }
+    .cv-executive .cv-edu-school { font-family:"Montserrat",sans-serif; font-size:9px; color:#888; text-transform:uppercase; margin-bottom:10px; }
+
+    .cv-classic { background:#fff; font-family:"Montserrat",sans-serif; padding:55px; }
+    .cv-classic .cv-header { text-align:center; padding-bottom:20px; border-bottom:2px solid #000; margin-bottom:25px; }
+    .cv-classic .cv-name { font-size:32px; font-weight:800; text-transform:uppercase; letter-spacing:6px; margin-bottom:5px; }
+    .cv-classic .cv-role { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:4px; color:#555; margin-bottom:10px; }
+    .cv-classic .cv-contact { font-size:10px; color:#555; display:flex; justify-content:center; gap:20px; flex-wrap:wrap; text-transform:uppercase; }
+    .cv-classic .cv-section { margin-bottom:25px; }
+    .cv-classic .cv-section-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:4px; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:15px; }
+    .cv-classic .cv-summary { font-size:12px; line-height:1.8; color:#333; }
+    .cv-classic .cv-exp-item { margin-bottom:18px; }
+    .cv-classic .cv-exp-header { display:flex; justify-content:space-between; }
+    .cv-classic .cv-exp-title { font-size:12px; font-weight:700; text-transform:uppercase; }
+    .cv-classic .cv-exp-date { font-size:10px; color:#666; text-transform:uppercase; }
+    .cv-classic .cv-exp-company { font-size:10px; color:#666; text-transform:uppercase; margin-bottom:5px; font-style:italic; }
+    .cv-classic .cv-exp-desc { font-size:11px; line-height:1.7; color:#444; }
+    .cv-classic .cv-skills-wrap { display:flex; flex-wrap:wrap; gap:6px; }
+    .cv-classic .cv-skill { font-size:10px; text-transform:uppercase; background:#f0f0f0; padding:4px 12px; }
+    .cv-classic .cv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    .cv-classic .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:4px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-classic .cv-lang-level { color:#666; }
+    .cv-classic .cv-edu-degree { font-size:12px; font-weight:700; text-transform:uppercase; }
+    .cv-classic .cv-edu-school { font-size:10px; color:#666; text-transform:uppercase; }
+
+    .cv-academic { background:#fff; font-family:"Montserrat",sans-serif; }
+    .cv-academic .cv-top { background:#1a1a2e; padding:45px 55px; }
+    .cv-academic .cv-name { font-size:34px; font-weight:800; text-transform:uppercase; letter-spacing:3px; color:#fff; margin-bottom:5px; }
+    .cv-academic .cv-role { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:4px; color:#a8d8ea; margin-bottom:15px; }
+    .cv-academic .cv-contact { display:flex; gap:20px; flex-wrap:wrap; font-size:9px; color:rgba(255,255,255,0.6); text-transform:uppercase; }
+    .cv-academic .cv-body { padding:40px 55px; }
+    .cv-academic .cv-section-title { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:4px; color:#1a1a2e; margin-bottom:15px; padding-left:12px; border-left:3px solid #1a1a2e; }
+    .cv-academic .cv-summary { font-size:12px; line-height:1.8; color:#333; margin-bottom:30px; }
+    .cv-academic .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #eee; }
+    .cv-academic .cv-exp-item:last-child { border-bottom:none; }
+    .cv-academic .cv-exp-title { font-size:12px; font-weight:700; text-transform:uppercase; margin-bottom:2px; }
+    .cv-academic .cv-exp-meta { font-size:9px; color:#666; text-transform:uppercase; margin-bottom:7px; }
+    .cv-academic .cv-exp-desc { font-size:11px; line-height:1.7; color:#444; }
+    .cv-academic .cv-skills-wrap { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:25px; }
+    .cv-academic .cv-skill { background:#1a1a2e; color:#fff; padding:4px 12px; font-size:9px; font-weight:600; text-transform:uppercase; }
+    .cv-academic .cv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    .cv-academic .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-academic .cv-lang-level { color:#1a1a2e; font-weight:700; }
+    .cv-academic .cv-edu-degree { font-size:12px; font-weight:700; text-transform:uppercase; }
+    .cv-academic .cv-edu-school { font-size:10px; color:#666; text-transform:uppercase; }
+    .cv-academic .cv-section-block { margin-bottom:30px; }
+
+    .cv-tech { background:#0d0d0d; font-family:"Space Grotesk",sans-serif; color:#fff; }
+    .cv-tech .cv-top { padding:45px 50px; border-bottom:1px solid #333; }
+    .cv-tech .cv-name { font-size:38px; font-weight:700; letter-spacing:2px; color:#fff; margin-bottom:5px; }
+    .cv-tech .cv-role { font-size:12px; font-weight:500; letter-spacing:3px; color:#88ffc6; text-transform:uppercase; margin-bottom:15px; }
+    .cv-tech .cv-contact { display:flex; gap:20px; flex-wrap:wrap; font-size:10px; color:#666; text-transform:uppercase; }
+    .cv-tech .cv-body { padding:40px 50px; display:grid; grid-template-columns:1fr 220px; gap:40px; }
+    .cv-tech .cv-section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#88ffc6; margin-bottom:15px; }
+    .cv-tech .cv-summary { font-size:12px; line-height:1.8; color:#aaa; margin-bottom:30px; }
+    .cv-tech .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #222; }
+    .cv-tech .cv-exp-item:last-child { border-bottom:none; }
+    .cv-tech .cv-exp-title { font-size:14px; font-weight:600; color:#fff; margin-bottom:2px; }
+    .cv-tech .cv-exp-meta { font-size:10px; color:#555; text-transform:uppercase; margin-bottom:7px; }
+    .cv-tech .cv-exp-desc { font-size:11px; line-height:1.7; color:#888; }
+    .cv-tech .cv-sidebar-section { margin-bottom:25px; }
+    .cv-tech .cv-sidebar-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:#88ffc6; margin-bottom:12px; }
+    .cv-tech .cv-skill { font-size:10px; color:#aaa; padding:5px 0; border-bottom:1px solid #222; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .cv-tech .cv-skill::before { content:'>'; color:#88ffc6; font-weight:700; }
+    .cv-tech .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid #222; text-transform:uppercase; color:#aaa; }
+    .cv-tech .cv-lang-level { color:#88ffc6; }
+    .cv-tech .cv-edu-degree { font-size:13px; font-weight:600; color:#fff; }
+    .cv-tech .cv-edu-school { font-size:10px; color:#555; text-transform:uppercase; margin-bottom:10px; }
+    .cv-tech .cv-section-block { margin-bottom:30px; }
+
+    .cv-creative { background:#fff; font-family:"Montserrat",sans-serif; }
+    .cv-creative .cv-top { padding:45px 50px 0; display:grid; grid-template-columns:1fr auto; gap:30px; align-items:end; }
+    .cv-creative .cv-name { font-size:48px; font-weight:900; text-transform:uppercase; line-height:0.95; letter-spacing:-1px; }
+    .cv-creative .cv-name span { color:#fff; -webkit-text-stroke:2px #000; }
+    .cv-creative .cv-role { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#666; text-align:right; }
+    .cv-creative .cv-divider { height:4px; background:#000; margin:20px 50px; }
+    .cv-creative .cv-contact-bar { background:#000; padding:12px 50px; display:flex; gap:30px; flex-wrap:wrap; }
+    .cv-creative .cv-contact-item { font-size:9px; color:rgba(255,255,255,0.7); text-transform:uppercase; }
+    .cv-creative .cv-body { padding:35px 50px; display:grid; grid-template-columns:1fr 200px; gap:40px; }
+    .cv-creative .cv-section-title { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:5px; margin-bottom:15px; display:flex; align-items:center; gap:10px; }
+    .cv-creative .cv-section-title::after { content:''; flex:1; height:1px; background:#000; }
+    .cv-creative .cv-summary { font-size:12px; line-height:1.8; color:#333; margin-bottom:25px; }
+    .cv-creative .cv-exp-item { margin-bottom:18px; padding-bottom:18px; border-bottom:1px solid #eee; }
+    .cv-creative .cv-exp-item:last-child { border-bottom:none; }
+    .cv-creative .cv-exp-title { font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:2px; }
+    .cv-creative .cv-exp-meta { font-size:9px; color:#888; text-transform:uppercase; margin-bottom:6px; }
+    .cv-creative .cv-exp-desc { font-size:11px; line-height:1.7; color:#555; }
+    .cv-creative .cv-sidebar-section { margin-bottom:25px; }
+    .cv-creative .cv-sidebar-title { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:3px; margin-bottom:12px; }
+    .cv-creative .cv-skill { font-size:9px; font-weight:700; text-transform:uppercase; padding:5px 10px; background:#000; color:#fff; margin-bottom:5px; display:inline-block; margin-right:4px; }
+    .cv-creative .cv-lang-item { display:flex; justify-content:space-between; font-size:9px; padding:4px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-creative .cv-lang-level { color:#888; }
+    .cv-creative .cv-edu-degree { font-size:12px; font-weight:700; text-transform:uppercase; }
+    .cv-creative .cv-edu-school { font-size:9px; color:#888; text-transform:uppercase; margin-bottom:8px; }
+    .cv-creative .cv-section-block { margin-bottom:25px; }
+
+    .cv-elegant { background:#fff; font-family:"Cormorant Garamond",serif; padding:60px; }
+    .cv-elegant .cv-name { font-size:50px; font-weight:300; letter-spacing:8px; text-transform:uppercase; margin-bottom:5px; text-align:center; }
+    .cv-elegant .cv-role { font-size:11px; font-weight:400; letter-spacing:6px; text-transform:uppercase; color:#999; text-align:center; margin-bottom:20px; font-family:"Montserrat",sans-serif; }
+    .cv-elegant .cv-contact { display:flex; justify-content:center; gap:30px; flex-wrap:wrap; font-family:"Montserrat",sans-serif; font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:2px; padding-bottom:25px; border-bottom:1px solid #ddd; margin-bottom:35px; }
+    .cv-elegant .cv-section-title { font-size:13px; font-weight:300; letter-spacing:6px; text-transform:uppercase; margin-bottom:15px; text-align:center; }
+    .cv-elegant .cv-divider { width:60px; height:1px; background:#000; margin:0 auto 25px; }
+    .cv-elegant .cv-summary { font-size:14px; line-height:2; color:#555; margin-bottom:35px; text-align:center; font-style:italic; }
+    .cv-elegant .cv-exp-item { margin-bottom:25px; padding-bottom:25px; border-bottom:1px solid #f0f0f0; }
+    .cv-elegant .cv-exp-item:last-child { border-bottom:none; }
+    .cv-elegant .cv-exp-title { font-size:18px; font-weight:400; margin-bottom:3px; }
+    .cv-elegant .cv-exp-meta { font-family:"Montserrat",sans-serif; font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+    .cv-elegant .cv-exp-desc { font-size:13px; line-height:1.9; color:#666; }
+    .cv-elegant .cv-skills-wrap { display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-bottom:30px; }
+    .cv-elegant .cv-skill { font-family:"Montserrat",sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:#999; border-bottom:1px solid #ddd; padding:3px 0; }
+    .cv-elegant .cv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+    .cv-elegant .cv-lang-item { display:flex; justify-content:space-between; font-family:"Montserrat",sans-serif; font-size:10px; padding:5px 0; border-bottom:1px solid #f0f0f0; text-transform:uppercase; }
+    .cv-elegant .cv-lang-level { color:#aaa; }
+    .cv-elegant .cv-edu-degree { font-size:16px; font-weight:400; }
+    .cv-elegant .cv-edu-school { font-family:"Montserrat",sans-serif; font-size:9px; color:#aaa; text-transform:uppercase; margin-bottom:10px; }
+    .cv-elegant .cv-section-block { margin-bottom:35px; }
+
+    .cv-bold { background:#fff; font-family:"Montserrat",sans-serif; display:grid; grid-template-columns:12px 1fr; }
+    .cv-bold .cv-accent-bar { background:#88ffc6; }
+    .cv-bold .cv-top { padding:40px 40px 30px; border-bottom:2px solid #000; display:flex; justify-content:space-between; align-items:flex-end; }
+    .cv-bold .cv-name { font-size:38px; font-weight:900; text-transform:uppercase; letter-spacing:2px; line-height:1; }
+    .cv-bold .cv-top-right { text-align:right; }
+    .cv-bold .cv-role { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#555; margin-bottom:8px; }
+    .cv-bold .cv-contact { font-size:9px; color:#888; text-transform:uppercase; line-height:1.8; }
+    .cv-bold .cv-body { padding:35px 40px; display:grid; grid-template-columns:1fr 220px; gap:40px; }
+    .cv-bold .cv-section-title { font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:5px; margin-bottom:15px; display:flex; align-items:center; gap:10px; }
+    .cv-bold .cv-section-title::after { content:''; flex:1; height:2px; background:#88ffc6; }
+    .cv-bold .cv-summary { font-size:12px; line-height:1.8; color:#333; margin-bottom:25px; }
+    .cv-bold .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #eee; }
+    .cv-bold .cv-exp-item:last-child { border-bottom:none; }
+    .cv-bold .cv-exp-title { font-size:13px; font-weight:800; text-transform:uppercase; margin-bottom:2px; }
+    .cv-bold .cv-exp-meta { font-size:9px; color:#888; text-transform:uppercase; margin-bottom:6px; }
+    .cv-bold .cv-exp-desc { font-size:11px; line-height:1.7; color:#555; }
+    .cv-bold .cv-sidebar-section { margin-bottom:25px; }
+    .cv-bold .cv-sidebar-title { font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:3px; margin-bottom:12px; padding-bottom:5px; border-bottom:2px solid #000; }
+    .cv-bold .cv-skill { font-size:10px; padding:5px 0; border-bottom:1px solid #eee; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .cv-bold .cv-skill::before { content:''; width:6px; height:6px; background:#88ffc6; border:1px solid #000; flex-shrink:0; }
+    .cv-bold .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-bold .cv-lang-level { color:#888; }
+    .cv-bold .cv-edu-degree { font-size:12px; font-weight:700; text-transform:uppercase; }
+    .cv-bold .cv-edu-school { font-size:9px; color:#888; text-transform:uppercase; margin-bottom:10px; }
+
+    .cv-neon { background:#111; font-family:"Space Grotesk",sans-serif; color:#fff; }
+    .cv-neon .cv-top { padding:50px; border-bottom:1px solid #222; }
+    .cv-neon .cv-name { font-size:44px; font-weight:700; color:#fff; margin-bottom:5px; line-height:1; }
+    .cv-neon .cv-name .highlight { color:#88ffc6; }
+    .cv-neon .cv-role { font-size:12px; font-weight:500; letter-spacing:4px; color:#555; text-transform:uppercase; margin-bottom:15px; }
+    .cv-neon .cv-contact { display:flex; gap:20px; flex-wrap:wrap; font-size:10px; color:#444; text-transform:uppercase; }
+    .cv-neon .cv-contact span::before { content:'▸ '; color:#88ffc6; }
+    .cv-neon .cv-body { padding:40px 50px; }
+    .cv-neon .cv-section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#88ffc6; margin-bottom:15px; padding-bottom:8px; border-bottom:1px solid #222; }
+    .cv-neon .cv-summary { font-size:12px; line-height:1.8; color:#888; margin-bottom:30px; }
+    .cv-neon .cv-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+    .cv-neon .cv-exp-item { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #1a1a1a; }
+    .cv-neon .cv-exp-item:last-child { border-bottom:none; }
+    .cv-neon .cv-exp-title { font-size:14px; font-weight:600; color:#fff; margin-bottom:2px; }
+    .cv-neon .cv-exp-meta { font-size:10px; color:#444; text-transform:uppercase; margin-bottom:7px; }
+    .cv-neon .cv-exp-desc { font-size:11px; line-height:1.7; color:#666; }
+    .cv-neon .cv-skill { font-size:10px; color:#88ffc6; padding:4px 10px; border:1px solid #222; text-transform:uppercase; display:inline-block; margin:3px 3px 3px 0; }
+    .cv-neon .cv-lang-item { display:flex; justify-content:space-between; font-size:10px; padding:5px 0; border-bottom:1px solid #1a1a1a; text-transform:uppercase; color:#666; }
+    .cv-neon .cv-lang-level { color:#88ffc6; }
+    .cv-neon .cv-edu-degree { font-size:13px; font-weight:600; color:#fff; }
+    .cv-neon .cv-edu-school { font-size:10px; color:#444; text-transform:uppercase; margin-bottom:10px; }
+    .cv-neon .cv-section-block { margin-bottom:30px; }
+
+    .cv-newspaper { background:#fff; font-family:"Playfair Display",serif; padding:50px 55px; }
+    .cv-newspaper .cv-masthead { text-align:center; border-top:4px solid #000; border-bottom:4px solid #000; padding:20px 0; margin-bottom:5px; }
+    .cv-newspaper .cv-name { font-size:52px; font-weight:800; letter-spacing:3px; text-transform:uppercase; line-height:1; }
+    .cv-newspaper .cv-tagline { font-family:"Montserrat",sans-serif; font-size:9px; text-transform:uppercase; letter-spacing:4px; color:#666; margin-top:5px; }
+    .cv-newspaper .cv-dateline { font-family:"Montserrat",sans-serif; font-size:9px; text-transform:uppercase; letter-spacing:2px; color:#888; padding:8px 0; border-bottom:1px solid #000; margin-bottom:20px; display:flex; justify-content:space-between; }
+    .cv-newspaper .cv-columns { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid #000; }
+    .cv-newspaper .cv-col { padding:20px; border-right:1px solid #000; }
+    .cv-newspaper .cv-col:last-child { border-right:none; }
+    .cv-newspaper .cv-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:3px; margin-bottom:10px; padding-bottom:5px; border-bottom:2px solid #000; font-family:"Montserrat",sans-serif; }
+    .cv-newspaper .cv-summary { font-size:12px; line-height:1.8; color:#333; font-style:italic; }
+    .cv-newspaper .cv-exp-item { margin-bottom:15px; padding-bottom:15px; border-bottom:1px solid #eee; }
+    .cv-newspaper .cv-exp-item:last-child { border-bottom:none; }
+    .cv-newspaper .cv-exp-title { font-size:14px; font-weight:700; margin-bottom:2px; }
+    .cv-newspaper .cv-exp-meta { font-family:"Montserrat",sans-serif; font-size:9px; color:#888; text-transform:uppercase; margin-bottom:6px; }
+    .cv-newspaper .cv-exp-desc { font-size:11px; line-height:1.7; color:#444; font-family:"Montserrat",sans-serif; }
+    .cv-newspaper .cv-skill { font-family:"Montserrat",sans-serif; font-size:10px; padding:3px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-newspaper .cv-lang-item { font-family:"Montserrat",sans-serif; display:flex; justify-content:space-between; font-size:10px; padding:4px 0; border-bottom:1px solid #eee; text-transform:uppercase; }
+    .cv-newspaper .cv-lang-level { color:#888; }
+    .cv-newspaper .cv-edu-degree { font-size:14px; font-weight:700; }
+    .cv-newspaper .cv-edu-school { font-family:"Montserrat",sans-serif; font-size:9px; color:#888; text-transform:uppercase; margin-bottom:10px; }
+
+    @media(max-width:768px) {
+      .page-header { padding:20px; }
+      .hero { padding:40px 20px 30px; }
+      .hero-heading { font-size:32px; }
+      .cv-section { padding:20px; }
+      .how-to { margin:0 20px 40px; }
+      .how-to-steps { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="logo">CV<span>.</span>Build</a>
+  </header>
+
+  <div class="hero">
+    <p class="hero-label">Step 03 — Download</p>
+    <h1 class="hero-heading">Your CV Is <span>Ready</span></h1>
+    <p class="hero-sub">Download as PDF — completely free</p>
+  </div>
+
+  <div class="cv-section">
+    <div class="cv-card">
+      <div class="cv-card-header">
+        <span class="cv-card-title" id="cvCardTitle">Your CV</span>
+        <span style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:2px;">FREE DOWNLOAD</span>
+      </div>
+      <div class="cv-card-body" id="cvCardBody"></div>
+      <div class="cv-card-footer">
+        <span class="cv-card-hint">Scroll to preview • Download saves as PDF</span>
+        <button class="download-btn" onclick="downloadCV()">
+          <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-6 2h12v2H6v-2z"/></svg>
+          Download Free PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-to">
+    <div class="how-to-title">How To Save As PDF</div>
+    <div class="how-to-steps">
+      <div class="how-to-step">
+        <div class="step-num">1</div>
+        <div class="step-text">Click the Download Free PDF button above</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">2</div>
+        <div class="step-text">A print preview will open on your screen</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">3</div>
+        <div class="step-text">On phone: tap Share icon → Save as PDF</div>
+      </div>
+      <div class="how-to-step">
+        <div class="step-num">4</div>
+        <div class="step-text">On laptop: select Save as PDF from the printer list</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="templates.html" class="back-link">← Choose a different template</a>
+
+  <div id="printArea" style="display:none;"></div>
+
+  <script>
+    const cvData = JSON.parse(localStorage.getItem('cvData') || '{}');
+    const selectedName = localStorage.getItem('selectedTemplateName') || 'Minimal';
+    const s = v => v || '';
+    const hasExp = e => e && e.length > 0 && e[0].title;
+    const hasEdu = e => e && e.length > 0 && e[0].degree;
+    const hasLang = l => l && l.length > 0 && l[0].name;
+    const hasSk = sk => sk && sk.length > 0;
+
+    document.getElementById('cvCardTitle').textContent = `Your CV — ${selectedName} Template`;
+
+    const RENDERERS = {
+      Minimal: renderMinimal, Modern: renderModern, Corporate: renderCorporate,
+      Executive: renderExecutive, Classic: renderClassic, Academic: renderAcademic,
+      Tech: renderTech, Creative: renderCreative, Elegant: renderElegant,
+      Bold: renderBold, Neon: renderNeon, Newspaper: renderNewspaper
+    };
+
+    function getHTML() {
+      const fn = RENDERERS[selectedName] || renderMinimal;
+      return fn();
+    }
+
+    function renderMinimal() {
+      const d = cvData;
+      let h=`<div class="cv-minimal"><div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div>`;
+      if(d.summary)h+=`<div class="cv-section-block"><div class="cv-section-title">Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){h+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{h+=`<div class="cv-exp-item"><div class="cv-exp-header"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-date">${s(e.start)}${e.end?' — '+e.end:''}</div></div><div class="cv-exp-company">${s(e.company)}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});h+=`</div>`}
+      if(hasSk(d.skills))h+=`<div class="cv-section-block"><div class="cv-section-title">Skills</div><div class="cv-skills-wrap">${d.skills.map(sk=>`<div class="cv-skill">${sk}</div>`).join('')}</div></div>`;
+      if(hasEdu(d.education)||hasLang(d.languages)){h+=`<div class="cv-two-col">`;if(hasEdu(d.education)){h+=`<div><div class="cv-section-title">Education</div>`;d.education.forEach(e=>{h+=`<div><div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div></div>`});h+=`</div>`}if(hasLang(d.languages)){h+=`<div><div class="cv-section-title">Languages</div>`;d.languages.forEach(l=>{h+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});h+=`</div>`}h+=`</div>`}
+      if(d.customSections)d.customSections.forEach(cs=>{if(cs.title)h+=`<div class="cv-section-block"><div class="cv-section-title">${s(cs.title)}</div><div class="cv-summary">${s(cs.content)}</div></div>`});
+      return h+`</div>`;
+    }
+    function renderModern() {
+      const d=cvData;
+      let sb=`<div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="sidebar-section-title">Contact</div>${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<div class="cv-contact-item">${v}</div>`).join('')}`;
+      if(hasSk(d.skills)){sb+=`<div class="sidebar-section-title">Skills</div>`;d.skills.forEach(sk=>{sb+=`<div class="cv-skill"><div class="cv-skill-dot"></div><span class="cv-skill-name">${sk}</span></div>`})}
+      if(hasLang(d.languages)){sb+=`<div class="sidebar-section-title">Languages</div>`;d.languages.forEach(l=>{sb+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`})}
+      if(hasEdu(d.education)){sb+=`<div class="sidebar-section-title">Education</div>`;d.education.forEach(e=>{sb+=`<div style="margin-bottom:10px"><div style="font-size:10px;font-weight:700;color:#fff;text-transform:uppercase">${s(e.degree)}</div><div style="font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase">${s(e.school)}</div></div>`})}
+      let m='';
+      if(d.summary)m+=`<div class="cv-section-block"><div class="cv-section-title">Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){m+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{m+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});m+=`</div>`}
+      if(d.customSections)d.customSections.forEach(cs=>{if(cs.title)m+=`<div class="cv-section-block"><div class="cv-section-title">${s(cs.title)}</div><div class="cv-summary">${s(cs.content)}</div></div>`});
+      return `<div class="cv-modern"><div class="cv-sidebar">${sb}</div><div class="cv-main">${m}</div></div>`;
+    }
+    function renderCorporate() {
+      const d=cvData;
+      let top=`<div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div>`;
+      let body='';
+      if(d.summary)body+=`<div class="cv-section-block"><div class="cv-section-title">Professional Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){body+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{body+=`<div class="cv-exp-item"><div class="cv-exp-header"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-date">${s(e.start)}${e.end?' — '+e.end:''}</div></div><div class="cv-exp-company">${s(e.company)}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});body+=`</div>`}
+      if(hasSk(d.skills)||hasLang(d.languages)||hasEdu(d.education)){body+=`<div class="cv-two-col">`;if(hasSk(d.skills)){body+=`<div><div class="cv-section-title">Skills</div>`;d.skills.forEach(sk=>{body+=`<div class="cv-skill">${sk}</div>`});body+=`</div>`}let r='';if(hasLang(d.languages)){r+=`<div class="cv-section-title">Languages</div>`;d.languages.forEach(l=>{r+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`})}if(hasEdu(d.education)){r+=`<div class="cv-section-title" style="margin-top:20px">Education</div>`;d.education.forEach(e=>{r+=`<div><div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div></div>`})}body+=`<div>${r}</div></div>`}
+      return `<div class="cv-corporate"><div class="cv-top">${top}</div><div class="cv-body">${body}</div></div>`;
+    }
+    function renderExecutive() {
+      const d=cvData;
+      let main='';
+      if(d.summary)main+=`<div><div class="cv-section-title">Profile</div><div class="cv-section-line"></div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){main+=`<div style="margin-top:30px"><div class="cv-section-title">Experience</div><div class="cv-section-line"></div>`;d.experience.forEach(e=>{main+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});main+=`</div>`}
+      let side='';
+      if(hasSk(d.skills)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Skills</div><div class="cv-sidebar-line"></div>`;d.skills.forEach(sk=>{side+=`<div class="cv-skill">${sk}</div>`});side+=`</div>`}
+      if(hasLang(d.languages)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div><div class="cv-sidebar-line"></div>`;d.languages.forEach(l=>{side+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});side+=`</div>`}
+      if(hasEdu(d.education)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Education</div><div class="cv-sidebar-line"></div>`;d.education.forEach(e=>{side+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});side+=`</div>`}
+      return `<div class="cv-executive"><div class="cv-top"><div class="cv-name">${s(d.fullName)}</div><div class="cv-top-right"><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location].filter(Boolean).join('<br>')}</div></div></div><div class="cv-body"><div>${main}</div><div>${side}</div></div></div>`;
+    }
+    function renderClassic() {
+      const d=cvData;
+      let h=`<div class="cv-classic"><div class="cv-header"><div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div></div>`;
+      if(d.summary)h+=`<div class="cv-section"><div class="cv-section-title">Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){h+=`<div class="cv-section"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{h+=`<div class="cv-exp-item"><div class="cv-exp-header"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-date">${s(e.start)}${e.end?' — '+e.end:''}</div></div><div class="cv-exp-company">${s(e.company)}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});h+=`</div>`}
+      if(hasSk(d.skills))h+=`<div class="cv-section"><div class="cv-section-title">Skills</div><div class="cv-skills-wrap">${d.skills.map(sk=>`<div class="cv-skill">${sk}</div>`).join('')}</div></div>`;
+      if(hasEdu(d.education)||hasLang(d.languages)){h+=`<div class="cv-section"><div class="cv-two-col">`;if(hasEdu(d.education)){h+=`<div><div class="cv-section-title">Education</div>`;d.education.forEach(e=>{h+=`<div><div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div></div>`});h+=`</div>`}if(hasLang(d.languages)){h+=`<div><div class="cv-section-title">Languages</div>`;d.languages.forEach(l=>{h+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});h+=`</div>`}h+=`</div></div>`}
+      return h+`</div>`;
+    }
+    function renderAcademic() {
+      const d=cvData;
+      let body='';
+      if(d.summary)body+=`<div class="cv-section-block"><div class="cv-section-title">About Me</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){body+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{body+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});body+=`</div>`}
+      if(hasSk(d.skills))body+=`<div class="cv-section-block"><div class="cv-section-title">Skills</div><div class="cv-skills-wrap">${d.skills.map(sk=>`<div class="cv-skill">${sk}</div>`).join('')}</div></div>`;
+      if(hasEdu(d.education)||hasLang(d.languages)){body+=`<div class="cv-two-col">`;if(hasEdu(d.education)){body+=`<div><div class="cv-section-title">Education</div>`;d.education.forEach(e=>{body+=`<div><div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div></div>`});body+=`</div>`}if(hasLang(d.languages)){body+=`<div><div class="cv-section-title">Languages</div>`;d.languages.forEach(l=>{body+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});body+=`</div>`}body+=`</div>`}
+      return `<div class="cv-academic"><div class="cv-top"><div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div></div><div class="cv-body">${body}</div></div>`;
+    }
+    function renderTech() {
+      const d=cvData;
+      let main='';
+      if(d.summary)main+=`<div class="cv-section-block"><div class="cv-section-title">// About</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){main+=`<div class="cv-section-block"><div class="cv-section-title">// Experience</div>`;d.experience.forEach(e=>{main+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});main+=`</div>`}
+      let side='';
+      if(hasSk(d.skills)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Skills</div>`;d.skills.forEach(sk=>{side+=`<div class="cv-skill">${sk}</div>`});side+=`</div>`}
+      if(hasLang(d.languages)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div>`;d.languages.forEach(l=>{side+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});side+=`</div>`}
+      if(hasEdu(d.education)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Education</div>`;d.education.forEach(e=>{side+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});side+=`</div>`}
+      return `<div class="cv-tech"><div class="cv-top"><div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div></div><div class="cv-body"><div>${main}</div><div>${side}</div></div></div>`;
+    }
+    function renderCreative() {
+      const d=cvData;
+      const parts=s(d.fullName).split(' ');
+      const fn=parts[0]||'',ln=parts.slice(1).join(' ')||'';
+      let main='';
+      if(d.summary)main+=`<div class="cv-section-block"><div class="cv-section-title">Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){main+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{main+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});main+=`</div>`}
+      let side='';
+      if(hasSk(d.skills)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Skills</div><div>`;d.skills.forEach(sk=>{side+=`<span class="cv-skill">${sk}</span>`});side+=`</div></div>`}
+      if(hasLang(d.languages)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div>`;d.languages.forEach(l=>{side+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});side+=`</div>`}
+      if(hasEdu(d.education)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Education</div>`;d.education.forEach(e=>{side+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});side+=`</div>`}
+      return `<div class="cv-creative"><div class="cv-top"><div class="cv-name">${fn}<br><span>${ln}</span></div><div class="cv-role">${s(d.jobTitle)}</div></div><div class="cv-divider"></div><div class="cv-contact-bar">${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<span class="cv-contact-item">${v}</span>`).join('')}</div><div class="cv-body"><div>${main}</div><div>${side}</div></div></div>`;
+    }
+    function renderElegant() {
+      const d=cvData;
+      let h=`<div class="cv-elegant"><div class="cv-name">${s(d.fullName)}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location,d.website].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div>`;
+      if(d.summary)h+=`<div class="cv-section-block"><div class="cv-section-title">Profile</div><div class="cv-divider"></div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){h+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div><div class="cv-divider"></div>`;d.experience.forEach(e=>{h+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});h+=`</div>`}
+      if(hasSk(d.skills))h+=`<div class="cv-section-block"><div class="cv-section-title">Skills</div><div class="cv-divider"></div><div class="cv-skills-wrap">${d.skills.map(sk=>`<div class="cv-skill">${sk}</div>`).join('')}</div></div>`;
+      if(hasEdu(d.education)||hasLang(d.languages)){h+=`<div class="cv-two-col">`;if(hasEdu(d.education)){h+=`<div><div class="cv-section-title">Education</div><div class="cv-divider"></div>`;d.education.forEach(e=>{h+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});h+=`</div>`}if(hasLang(d.languages)){h+=`<div><div class="cv-section-title">Languages</div><div class="cv-divider"></div>`;d.languages.forEach(l=>{h+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});h+=`</div>`}h+=`</div>`}
+      return h+`</div>`;
+    }
+    function renderBold() {
+      const d=cvData;
+      let main='';
+      if(d.summary)main+=`<div class="cv-section-block"><div class="cv-section-title">Profile</div><div class="cv-summary">${d.summary}</div></div>`;
+      if(hasExp(d.experience)){main+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{main+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});main+=`</div>`}
+      if(d.customSections)d.customSections.forEach(cs=>{if(cs.title)main+=`<div class="cv-section-block"><div class="cv-section-title">${s(cs.title)}</div><div class="cv-summary">${s(cs.content)}</div></div>`});
+      let side='';
+      if(hasSk(d.skills)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Skills</div>`;d.skills.forEach(sk=>{side+=`<div class="cv-skill">${sk}</div>`});side+=`</div>`}
+      if(hasLang(d.languages)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Languages</div>`;d.languages.forEach(l=>{side+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});side+=`</div>`}
+      if(hasEdu(d.education)){side+=`<div class="cv-sidebar-section"><div class="cv-sidebar-title">Education</div>`;d.education.forEach(e=>{side+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});side+=`</div>`}
+      return `<div class="cv-bold"><div class="cv-accent-bar"></div><div><div class="cv-top"><div class="cv-name">${s(d.fullName)}</div><div class="cv-top-right"><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location].filter(Boolean).join('<br>')}</div></div></div><div class="cv-body"><div>${main}</div><div>${side}</div></div></div></div>`;
+    }
+    function renderNeon() {
+      const d=cvData;
+      const parts=s(d.fullName).split(' ');
+      const fn=parts[0]||'',ln=parts.slice(1).join(' ')||'';
+      let body='';
+      if(d.summary)body+=`<div class="cv-section-block"><div class="cv-section-title">About</div><div class="cv-summary">${d.summary}</div></div>`;
+      let col1='',col2='';
+      if(hasExp(d.experience)){col1+=`<div class="cv-section-block"><div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{col1+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`});col1+=`</div>`}
+      if(hasSk(d.skills)){col2+=`<div class="cv-section-block"><div class="cv-section-title">Skills</div><div>`;d.skills.forEach(sk=>{col2+=`<span class="cv-skill">${sk}</span>`});col2+=`</div></div>`}
+      if(hasLang(d.languages)){col2+=`<div class="cv-section-block"><div class="cv-section-title">Languages</div>`;d.languages.forEach(l=>{col2+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`});col2+=`</div>`}
+      if(hasEdu(d.education)){col2+=`<div class="cv-section-block"><div class="cv-section-title">Education</div>`;d.education.forEach(e=>{col2+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`});col2+=`</div>`}
+      return `<div class="cv-neon"><div class="cv-top"><div class="cv-name"><span class="highlight">${fn}</span> ${ln}</div><div class="cv-role">${s(d.jobTitle)}</div><div class="cv-contact">${[d.email,d.phone,d.location].filter(Boolean).map(v=>`<span>${v}</span>`).join('')}</div></div><div class="cv-body">${body}<div class="cv-grid"><div>${col1}</div><div>${col2}</div></div></div></div>`;
+    }
+    function renderNewspaper() {
+      const d=cvData;
+      let col1='',col2='',col3='';
+      col1+=`<div class="cv-section-title">Profile</div>`;
+      if(d.summary)col1+=`<div class="cv-summary">${d.summary}</div>`;
+      if(hasExp(d.experience)){col2+=`<div class="cv-section-title">Experience</div>`;d.experience.forEach(e=>{col2+=`<div class="cv-exp-item"><div class="cv-exp-title">${s(e.title)}</div><div class="cv-exp-meta">${s(e.company)}${e.start?' · '+e.start:''}${e.end?' — '+e.end:''}</div><div class="cv-exp-desc">${s(e.description)}</div></div>`})}
+      if(hasSk(d.skills)){col3+=`<div class="cv-section-title">Skills</div>`;d.skills.forEach(sk=>{col3+=`<div class="cv-skill">${sk}</div>`})}
+      if(hasLang(d.languages)){col3+=`<div class="cv-section-title" style="margin-top:15px">Languages</div>`;d.languages.forEach(l=>{col3+=`<div class="cv-lang-item"><span>${s(l.name)}</span><span class="cv-lang-level">${s(l.level)}</span></div>`})}
+      if(hasEdu(d.education)){col3+=`<div class="cv-section-title" style="margin-top:15px">Education</div>`;d.education.forEach(e=>{col3+=`<div class="cv-edu-degree">${s(e.degree)}</div><div class="cv-edu-school">${s(e.school)}</div>`})}
+      return `<div class="cv-newspaper"><div class="cv-masthead"><div class="cv-name">${s(d.fullName)}</div><div class="cv-tagline">${s(d.jobTitle)}</div></div><div class="cv-dateline"><span>${[d.email,d.phone].filter(Boolean).join(' · ')}</span><span>${s(d.location)}</span></div><div class="cv-columns"><div class="cv-col">${col1}</div><div class="cv-col">${col2}</div><div class="cv-col">${col3}</div></div></div>`;
+    }
+
+    document.getElementById('cvCardBody').innerHTML = getHTML();
+
+    function downloadCV() {
+      const printArea = document.getElementById('printArea');
+      printArea.innerHTML = getHTML();
+      printArea.style.display = 'block';
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+          printArea.style.display = 'none';
+          printArea.innerHTML = '';
+        }, 1000);
+      }, 300);
+    }
+  </script>
+</body>
+</html>
