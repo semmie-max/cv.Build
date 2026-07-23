@@ -293,7 +293,7 @@ if (cvGenre) {
       document.getElementById('progressFill').style.width = pct + '%';
     }
 
-    document.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', updateProgress));
+    document.querySelectorAll('input, textarea, select').forEach(el => el.addEventListener('input', updateProgress));
 
     function getExperiences() {
       const result = [];
@@ -357,25 +357,34 @@ if (cvGenre) {
         else el.classList.remove('error');
       });
       if (!valid) { alert('Please fill in all required fields.'); return; }
+      const experiences = getExperiences();
+
+if (experiences.length === 0) {
+    alert("Please add at least one work experience.");
+    return;
+}
+
+if (skills.length === 0) {
+    alert("Please add at least one skill.");
+    return;
+}
 
       const cvData = {
-        cvGenre: localStorage.getItem('cvGenre') || '',
-  jobRole: localStorage.getItem('jobRole') || '',
-  fullName: document.getElementById('fullName').value.trim(),
-        jobRole: localStorage.getItem('jobRole')||'',
-        fullName: document.getElementById('fullName').value.trim(),
-        jobTitle: document.getElementById('jobTitle').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        location: document.getElementById('location').value.trim(),
-        website: document.getElementById('website').value.trim(),
-        summary: document.getElementById('summary').value.trim(),
-        skills,
-        experience: getExperiences(),
-        languages: getLanguages(),
-        education: getEducation(),
-        customSections: getCustomSections()
-      };
+    cvGenre: localStorage.getItem('cvGenre') || '',
+    jobRole: localStorage.getItem('jobRole') || '',
+    fullName: document.getElementById('fullName').value.trim(),
+    jobTitle: document.getElementById('jobTitle').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    location: document.getElementById('location').value.trim(),
+    website: document.getElementById('website').value.trim(),
+    summary: document.getElementById('summary').value.trim(),
+    skills,
+    experience: getExperiences(),
+    languages: getLanguages(),
+    education: getEducation(),
+    customSections: getCustomSections()
+};
 
       localStorage.setItem('cvData', JSON.stringify(cvData));
       window.location.href = 'templates.html';
@@ -386,16 +395,6 @@ if (cvGenre) {
   document.getElementById('genreText').textContent = (genreLabels[cvGenre] || cvGenre).toLowerCase();
 }
 
-const experiences = getExperiences();
-if (experiences.length === 0) {
-  alert('Please add at least one work experience.');
-  return;
-}
-
-if (skills.length === 0) {
-  alert('Please add at least one skill.');
-  return;
-}
   </script>
 </body>
 </html>
