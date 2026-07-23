@@ -57,6 +57,34 @@
       .hero-right { display:none; }
       .hero-heading { font-size:52px; }
     }
+
+
+
+    .genre-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+.genre-btn {
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  padding: 12px 18px;
+  font-family: "Libre Baskerville", serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.genre-btn:hover { background: #f5f5f5; }
+.genre-btn.active {
+  background: #000;
+  color: #fff;
+}
   </style>
 </head>
 <body>
@@ -73,7 +101,14 @@
         <span class="accent">Pro CV</span><br>
         <span class="outline">In Minutes</span>
       </h1>
-      <p class="hero-sub">Fill in your details once. Get 3 unique professionally designed CV templates. Pick your favorite and download for free.</p>
+      <p class="hero-sub">Choose your CV style, fill in your details once, then pick from matching templates and download for free.</p>
+      <p class="hero-label" style="margin-top:0;">Choose your CV style</p>
+<div class="genre-wrap" id="genreWrap">
+  <button type="button" class="genre-btn" data-genre="modern">Modern</button>
+  <button type="button" class="genre-btn" data-genre="classic">Classic</button>
+  <button type="button" class="genre-btn" data-genre="creative">Creative</button>
+  <button type="button" class="genre-btn" data-genre="minimal">Minimal</button>
+</div>
       <div class="search-wrap">
         <input type="text" class="search-input" id="jobInput" placeholder="What role are you applying for?">
         <button class="search-btn" id="startBtn" disabled onclick="goToQuestions()">Start →</button>
@@ -114,15 +149,40 @@
 
   <script>
     const input = document.getElementById('jobInput');
-    const btn = document.getElementById('startBtn');
-    input.addEventListener('input', () => {
-      btn.disabled = input.value.trim() === '';
-    });
-    function goToQuestions() {
-      localStorage.setItem('jobRole', input.value.trim());
-      window.location.href = 'question.html';
-    }
-    input.addEventListener('keydown', e => { if(e.key==='Enter' && !btn.disabled) goToQuestions(); });
+const btn = document.getElementById('startBtn');
+const genreBtns = document.querySelectorAll('.genre-btn');
+
+let selectedGenre = localStorage.getItem('cvGenre') || '';
+
+function updateStartButton() {
+  btn.disabled = !(input.value.trim() && selectedGenre);
+}
+
+genreBtns.forEach(btnEl => {
+  if (btnEl.dataset.genre === selectedGenre) {
+    btnEl.classList.add('active');
+  }
+  btnEl.addEventListener('click', () => {
+    genreBtns.forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+    selectedGenre = btnEl.dataset.genre;
+    updateStartButton();
+  });
+});
+
+input.addEventListener('input', updateStartButton);
+
+function goToQuestions() {
+  localStorage.setItem('jobRole', input.value.trim());
+  localStorage.setItem('cvGenre', selectedGenre);
+  window.location.href = 'question.html';
+}
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !btn.disabled) goToQuestions();
+});
+
+updateStartButton();
   </script>
 </body>
 </html>

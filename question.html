@@ -76,13 +76,19 @@
 <body>
   <header>
     <a href="index.html" class="logo">CV<span>.</span>Build</a>
-    <div class="job-badge" id="jobBadge">Your CV</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+  <div class="job-badge" id="genreBadge">Modern</div>
+  <div class="job-badge" id="jobBadge" style="background:#fff;color:#000;border:1px solid #000;">Your CV</div>
+</div>
   </header>
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
   <div class="hero">
-    <p class="hero-label">Step 01 — Your Details</p>
+    <p class="hero-label">Step 02 — Your Details</p>
     <h1 class="hero-heading">Tell Us <span>About You</span></h1>
+    <p class="hero-label" style="margin-top:16px;letter-spacing:2px;">
+  Building your <span id="genreText">modern</span> professional CV
+</p>
   </div>
 
   <div class="form-wrap">
@@ -103,7 +109,7 @@
       <div class="section-title"><span class="section-num">02</span> Professional Summary</div>
       <div class="form-group full">
         <label>Summary <span class="req">*</span></label>
-        <textarea id="summary" placeholder="Write a short paragraph about yourself, your experience, and what you bring to the table..."></textarea>
+        <textarea id="summary" placeholder="List achievements and responsibilities. Start with action verbs (e.g. Led, Built, Improved)..."></textarea>
       </div>
     </div>
 
@@ -143,16 +149,32 @@
   </div>
 
   <div class="submit-wrap">
-    <button class="submit-btn" onclick="submitForm()">Generate My CV Templates →</button>
+    <button class="submit-btn" onclick="submitForm()">View My Professional CV Templates →</button>
   </div>
 
   <script>
+
+    const cvGenre = localStorage.getItem('cvGenre') || '';
+if (!cvGenre) {
+  window.location.href = 'index.html';
+}
     
     const jobRole = localStorage.getItem('jobRole') || '';
     if (jobRole) {
       document.getElementById('jobBadge').textContent = jobRole;
       document.getElementById('jobTitle').value = jobRole;
     }
+
+    const genreLabels = {
+  modern: 'Modern',
+  classic: 'Classic',
+  creative: 'Creative',
+  minimal: 'Minimal'
+};
+
+if (cvGenre) {
+  document.getElementById('genreBadge').textContent = genreLabels[cvGenre] || cvGenre;
+}
 
     let skills = [];
     let expCount = 0, langCount = 0, eduCount = 0, customCount = 0;
@@ -337,6 +359,9 @@
       if (!valid) { alert('Please fill in all required fields.'); return; }
 
       const cvData = {
+        cvGenre: localStorage.getItem('cvGenre') || '',
+  jobRole: localStorage.getItem('jobRole') || '',
+  fullName: document.getElementById('fullName').value.trim(),
         jobRole: localStorage.getItem('jobRole')||'',
         fullName: document.getElementById('fullName').value.trim(),
         jobTitle: document.getElementById('jobTitle').value.trim(),
@@ -355,6 +380,22 @@
       localStorage.setItem('cvData', JSON.stringify(cvData));
       window.location.href = 'templates.html';
     }
+
+
+    if (cvGenre) {
+  document.getElementById('genreText').textContent = (genreLabels[cvGenre] || cvGenre).toLowerCase();
+}
+
+const experiences = getExperiences();
+if (experiences.length === 0) {
+  alert('Please add at least one work experience.');
+  return;
+}
+
+if (skills.length === 0) {
+  alert('Please add at least one skill.');
+  return;
+}
   </script>
 </body>
 </html>
